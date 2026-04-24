@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@/lib/supabase-browser";
 import { Todo } from "@/lib/types";
 import { TodoItem } from "@/components/TodoItem";
+
+const supabase = createBrowserClient();
 
 interface Props {
   today: string;

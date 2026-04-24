@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@/lib/supabase-browser";
 import { Todo } from "@/lib/types";
 import { TodoItem } from "@/components/TodoItem";
 import { TodoDetail } from "@/components/TodoDetail";
 import { PendingTodos } from "@/components/PendingTodos";
+
+const supabase = createBrowserClient();
 
 function getLocalDate(): string {
   const now = new Date();
@@ -99,6 +101,11 @@ export default function Home() {
     }
   }
 
+  async function signOut() {
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  }
+
   if (selectedTodo) {
     return (
       <TodoDetail
@@ -127,13 +134,21 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center bg-[#fafafa]">
       <div className="w-full max-w-xl px-5 py-10 flex flex-col flex-1">
-        <header className="mb-8">
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
-            Straight to the Point
-          </h1>
-          <p className="mt-1 text-sm text-zinc-500">
-            {formatDisplayDate(today)}
-          </p>
+        <header className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+              Straight to the Point
+            </h1>
+            <p className="mt-1 text-sm text-zinc-500">
+              {formatDisplayDate(today)}
+            </p>
+          </div>
+          <button
+            onClick={signOut}
+            className="text-xs text-zinc-400 hover:text-zinc-600 transition cursor-pointer mt-1"
+          >
+            Sign out
+          </button>
         </header>
 
         <form onSubmit={addTodo} className="mb-6">
